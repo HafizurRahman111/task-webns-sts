@@ -14,13 +14,13 @@ class Comment extends Model
     ];
 
     // A comment belongs to a ticket
-    public function ticket(): BelongsTo
+    public function ticket()
     {
         return $this->belongsTo(Ticket::class);
     }
 
     // A comment belongs to a user
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

@@ -29,7 +29,7 @@ class Ticket extends Model
     }
 
     // A ticket has many comments
-    public function comments(): HasMany
+    public function comments()
     {
         return $this->hasMany(Comment::class);
     }
