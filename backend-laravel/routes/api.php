@@ -26,18 +26,19 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Ticket routes
     Route::prefix('tickets')->group(function () {
-        // accessible to all authenticated users
+        // Accessible to all authenticated users
         Route::get('/', [TicketController::class, 'index']);
         Route::post('/', [TicketController::class, 'store']);
         Route::get('/{ticket}', [TicketController::class, 'show']);
+
         // Update and delete routes (require ownership for non-admins)
         Route::put('/{ticket}', [TicketController::class, 'update']);
         Route::delete('/{ticket}', [TicketController::class, 'destroy']);
 
         // Comment routes under a ticket
         Route::prefix('/{ticket}/comments')->group(function () {
-            // accessible to all authenticated users
-            Route::get('/', [CommentController::class, 'index']);
+            // Accessible to all authenticated users
+            Route::get('/', [CommentController::class, 'index']); // List all comments for a ticket
             Route::post('/', [CommentController::class, 'store']);
 
             // Delete a comment (require ownership for non-admins)
@@ -46,8 +47,8 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
         // Chat routes under a ticket
         Route::prefix('/{ticket}/chats')->group(function () {
-            // accessible to all authenticated users
-            Route::get('/', [ChatController::class, 'index']);
+            // Accessible to all authenticated users
+            Route::get('/', [ChatController::class, 'index']); // List all chats for a ticket
             Route::post('/', [ChatController::class, 'store']);
 
             // Delete a chat (require ownership for non-admins)
