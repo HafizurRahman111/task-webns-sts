@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -16,10 +17,10 @@ class AuthController extends Controller
     {
         // Validate the request data
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'name' => 'required|string|min:4|max:255',
+            'email' => 'required|string|email|min:4|max:255|unique:users',
             'phone' => 'required|string|min:4|max:20|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|max:50|confirmed',
         ]);
 
         // If validation fails, return error messages
@@ -58,10 +59,21 @@ class AuthController extends Controller
     // Login an existing user
     public function login(Request $request)
     {
+        // Initialize rate limiter
+        $limiter = app(RateLimiter::class);
+        $key = 'login:' . $request->ip();
+
+        // Allow 5 attempts per minute
+        if ($limiter->tooManyAttempts($key, 5)) {
+            return response()->json([
+                'message' => 'Too many login attempts. Please try again later.',
+            ], 429);
+        }
+
         // Validate the request data
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|exists:users,email',
-            'password' => 'required|string',
+            'email' => 'required|string|email|max:255|exists:users,email',
+            'password' => 'required|string|min:8',
         ]);
 
         // If validation fails, return error messages
@@ -72,15 +84,25 @@ class AuthController extends Controller
             ], 422);
         }
 
+        // Sanitize inputs
+        $email = filter_var($request->email, FILTER_SANITIZE_EMAIL);
+        $password = filter_var($request->password, FILTER_SANITIZE_STRING);
+
         // Attempt to find the user by email
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $email)->first();
 
         // Check if the user exists and the password is correct
-        if (!Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($password, $user->password)) {
+            // Increment rate limiter on failed attempt
+            $limiter->hit($key, 60);
+
             return response()->json([
                 'message' => 'The provided credentials are incorrect.',
             ], 401);
         }
+
+        // Reset rate limiter on successful login
+        $limiter->clear($key);
 
         // Generate an access token for the user
         $token = $user->createToken('auth_token')->plainTextToken;

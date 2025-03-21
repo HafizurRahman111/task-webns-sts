@@ -22,8 +22,9 @@ class ChatController extends Controller
     {
         try {
             $ticket = Ticket::findOrFail($ticketId);
-            $this->authorizeAccess($ticket); // Ensure the user has access to the ticket
-            $chats = $ticket->chats()->with('user')->paginate(10); // Fetch chats with user info and paginate
+            // Ensure the user has access to the ticket
+            $this->authorizeAccess($ticket);
+            $chats = $ticket->chats()->with('user')->paginate(10);
             return $this->successResponse($chats);
         } catch (ModelNotFoundException $e) {
             return $this->errorResponse('Ticket not found.', $e, 404);
@@ -40,13 +41,13 @@ class ChatController extends Controller
     {
         try {
             $ticket = Ticket::findOrFail($ticketId);
-            $this->authorizeAccess($ticket); // Ensure the user has access to the ticket
+            // Ensure the user has access to the ticket
+            $this->authorizeAccess($ticket);
             $validatedData = $this->validateChatRequest($request);
 
             $chat = $ticket->chats()->create([
                 'user_id' => Auth::id(),
                 'message' => $validatedData['message'],
-
             ]);
 
             return $this->successResponse($chat, 201);
@@ -66,8 +67,10 @@ class ChatController extends Controller
     {
         try {
             $ticket = Ticket::findOrFail($ticketId);
-            $this->authorizeAccess($ticket); // Ensure the user has access to the ticket
-            $chat = $ticket->chats()->findOrFail($chatId); // Ensure the chat belongs to the ticket
+            // Ensure the user has access to the ticket
+            $this->authorizeAccess($ticket);
+            // Ensure the chat belongs to the ticket
+            $chat = $ticket->chats()->findOrFail($chatId);
 
             // Delete the chat
             $chat->delete();
