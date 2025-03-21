@@ -3,64 +3,92 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chat;
-use App\Http\Controllers\Controller;
+use App\Models\Ticket;
+use App\Traits\AuthorizeResourceTrait;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ChatController extends Controller
 {
+    use AuthorizeResourceTrait, ResponseTrait;
+
     /**
-     * Display a listing of the resource.
+     * Display a listing of all chats for a specific ticket.
      */
-    public function index()
+    public function index(Request $request, $ticketId)
     {
-        //
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $this->authorizeAccess($ticket); // Ensure the user has access to the ticket
+            $chats = $ticket->chats()->with('user')->paginate(10); // Fetch chats with user info and paginate
+            return $this->successResponse($chats);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse('Ticket not found.', $e, 404);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to fetch chats.', $e);
+        }
+    }
+
+
+    /**
+     * Store a newly created chat in storage.
+     */
+    public function store(Request $request, $ticketId)
+    {
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $this->authorizeAccess($ticket); // Ensure the user has access to the ticket
+            $validatedData = $this->validateChatRequest($request);
+
+            $chat = $ticket->chats()->create([
+                'user_id' => Auth::id(),
+                'message' => $validatedData['message'],
+
+            ]);
+
+            return $this->successResponse($chat, 201);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse('Ticket not found.', $e, 404);
+        } catch (ValidationException $e) {
+            return $this->validationErrorResponse($e);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to create chat.', $e);
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Delete a chat.
      */
-    public function create()
+    public function destroy($ticketId, $chatId)
     {
-        //
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $this->authorizeAccess($ticket); // Ensure the user has access to the ticket
+            $chat = $ticket->chats()->findOrFail($chatId); // Ensure the chat belongs to the ticket
+
+            // Delete the chat
+            $chat->delete();
+
+            return $this->successResponse(['message' => 'Chat deleted successfully.']);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse('Chat not found.', $e, 404);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to delete chat.', $e);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    // Helper Methods
 
     /**
-     * Display the specified resource.
+     * Validate the chat request.
      */
-    public function show(Chat $chat)
+    private function validateChatRequest(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Chat $chat)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Chat $chat)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Chat $chat)
-    {
-        //
+        return $request->validate([
+            'message' => 'required|string|max:250', // Validate 'message' field
+        ]);
     }
 }

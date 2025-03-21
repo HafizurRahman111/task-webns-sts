@@ -47,8 +47,11 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         // Chat routes under a ticket
         Route::prefix('/{ticket}/chats')->group(function () {
             // accessible to all authenticated users
-            Route::get('/', [ChatController::class, 'getMessages']);
-            Route::post('/', [ChatController::class, 'sendMessage']);
+            Route::get('/', [ChatController::class, 'index']);
+            Route::post('/', [ChatController::class, 'store']);
+
+            // Delete a chat (require ownership for non-admins)
+            Route::delete('/{chat}', [ChatController::class, 'destroy']);
         });
     });
 
