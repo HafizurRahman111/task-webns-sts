@@ -2,7 +2,7 @@
   <SiteLayout>
     <!-- Hero Section -->
     <section
-      class="flex flex-col items-center justify-center text-center py-20 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+      class="flex flex-col items-center justify-center text-center py-10 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
       <h1 class="text-5xl font-bold mb-6">Welcome to the Support Ticketing System</h1>
       <p class="text-xl max-w-2xl mx-auto mb-8">
         Streamline your support process with our intuitive ticketing system. Manage, track, and resolve issues
@@ -42,7 +42,7 @@
     <!-- Testimonials Section -->
     <section class="bg-gray-50 py-6">
       <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center text-blue-600 mb-12">What Our Users Say</h2>
+        <h2 class="text-3xl font-bold text-center text-blue-600 mb-12 py-2">What Our Users Say</h2>
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <div class="p-8 bg-white rounded-lg shadow-lg">
             <p class="text-gray-700 italic">
@@ -65,20 +65,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Call to Action Section -->
-    <section class="bg-blue-600 text-white py-8">
-      <div class="container mx-auto px-6 text-center">
-        <h2 class="text-3xl font-bold mb-6 py-1">Ready to Get Started?</h2>
-        <p class="text-xl mb-8 py-2">
-          Join thousands of satisfied users and take your support process to the next level.
-        </p>
-        <router-link to="/register"
-          class="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
-          Sign Up Now
-        </router-link>
-      </div>
-    </section>
   </SiteLayout>
 </template>
 
@@ -93,6 +79,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* No custom CSS needed - Tailwind handles everything */
-</style>
+<style scoped></style>

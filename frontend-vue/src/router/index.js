@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SiteLayout from '@/components/layouts/SiteLayout.vue';
 import Home from '@/views/Home.vue'; // Ensure this path is correct
-import Login from '@/views/Login.vue'; // Ensure this path is correct
-import Register from '@/views/Register.vue';
+import Login from '@/views/auth/Login.vue'; // Ensure this path is correct
+import Register from '@/views/auth/Register.vue';
 // import DashboardLayout from '@/components/layouts/DashboardLayout.vue'; // Uncomment if you have this component
 // import Dashboard from '@/views/Dashboard.vue'; // Uncomment if you have this component
 
