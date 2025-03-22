@@ -1,7 +1,7 @@
 <template>
     <SiteLayout>
         <!-- Register Section -->
-        <section class="flex items-center justify-center min-h-screen bg-gray-100 p-6">
+        <section class="flex items-center justify-center min-h-[80vh] bg-gray-100 p-4">
             <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
                 <h2 class="text-2xl font-bold text-blue-600 mb-6 text-center">Register</h2>
 
@@ -17,7 +17,7 @@
                     </div>
 
                     <!-- Email Input -->
-                    <div class="mb-6">
+                    <div class="mb-6 py-2">
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" id="email" v-model="email" placeholder="Enter your email"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
@@ -26,7 +26,7 @@
                     </div>
 
                     <!-- Phone Input -->
-                    <div class="mb-6">
+                    <div class="mb-6 py-2">
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                         <input type="tel" id="phone" v-model="phone" placeholder="Enter your phone number"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
@@ -35,7 +35,7 @@
                     </div>
 
                     <!-- Password Input -->
-                    <div class="mb-6 relative">
+                    <div class="mb-6 relative py-2">
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                         <div class="relative">
                             <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password"
@@ -52,7 +52,7 @@
                     </div>
 
                     <!-- Confirm Password Input -->
-                    <div class="mb-6 relative">
+                    <div class="mb-6 relative py-2">
                         <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm
                             Password</label>
                         <div class="relative">
@@ -208,6 +208,4 @@ const handleRegister = async () => {
 };
 </script>
 
-<style scoped>
-/* No custom CSS needed - Tailwind handles everything */
-</style>
+<style scoped></style>
