@@ -1,0 +1,689 @@
+type: collection.insomnia.rest/5.0
+name: task-webns-sts
+meta:
+  id: wrk_ca7f854872d24b87a0b3bd4bb1b27f55
+  created: 1742466806097
+  modified: 1742466806097
+collection:
+  - name: Auth
+    meta:
+      id: fld_a6a680e81f3a4303aa73cafc3ced9972
+      created: 1741582660902
+      modified: 1742998219113
+      sortKey: -1742466190390
+    children:
+      - url: "{{ _.base.base_url }}/register"
+        name: Register
+        meta:
+          id: req_14b5ec9e490b4dd48563d3ff8a53a188
+          created: 1741554983006
+          modified: 1741588447393
+          isPrivate: false
+          sortKey: -1741582730010
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "name": "Test User",
+                "email": "testuser@example.com",
+                "password": "password123",
+                "password_confirmation": "password123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: none
+          disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/login"
+        name: Login
+        meta:
+          id: req_1b297cdccb074f4da3a42afb706197ea
+          created: 1741556445303
+          modified: 1742967735743
+          isPrivate: false
+          sortKey: -1741582729910
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "email": "admin@example.com",
+                "password": "pass1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: none
+          disabled: false
+        scripts:
+          afterResponse: >
+            // Test: Check if status code is 200
+
+            insomnia.test('Status Code is 200', () => {
+              const statusCode = insomnia.response.code;
+              console.log('Status Code:', statusCode);
+              insomnia.expect(statusCode).to.eql(200);
+            });
+
+
+            // Test: Check if response message is success
+
+            insomnia.test('Response message is success', () => {
+              const { message } = JSON.parse(insomnia.response.body);
+              console.log('Response Message:', message);
+              insomnia.expect(message).to.eql('User logged in successfully');
+            });
+
+
+            // Test: Validate user object fields
+
+            insomnia.test('User object has required fields', () => {
+              const { user } = JSON.parse(insomnia.response.body);
+              console.log('User:', user);
+              insomnia.expect(user).to.have.property('id');
+              insomnia.expect(user).to.have.property('name');
+              insomnia.expect(user).to.have.property('email');
+            });
+
+
+            // Test: Set auth_url with access token
+
+            insomnia.test('Set auth_url with access token', () => {
+              const { access_token } = JSON.parse(insomnia.response.body);
+              console.log('Access Token:', access_token);
+              insomnia.environment.set('auth_url', `Bearer ${access_token}`);
+              console.log('Set auth_url:', insomnia.environment.get('auth_url'));
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/user"
+        name: Current User
+        meta:
+          id: req_c11aa13598724cc2a5976cdfa2327228
+          created: 1741556636127
+          modified: 1742648889671
+          isPrivate: false
+          sortKey: -1741582717026.5
+        method: GET
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/logout"
+        name: "Logout "
+        meta:
+          id: req_4f5f4b783b234e9f8f56205af26ceda1
+          created: 1741582729810
+          modified: 1742499602388
+          isPrivate: false
+          sortKey: -1741582729810
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/stats"
+        name: Dashboard Stats
+        meta:
+          id: req_b29f230260704491bdbfc039a13a70df
+          created: 1742648820776
+          modified: 1742655792028
+          isPrivate: false
+          sortKey: -1741582723418.25
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.0
+        authentication:
+          type: bearer
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Users
+    meta:
+      id: fld_8a038c36d99e44a1bdf2d2db22bf09df
+      created: 1741583056221
+      modified: 1742466215038
+      sortKey: -1742466190365
+    children:
+      - name: Admin
+        meta:
+          id: fld_5bdfef5cf1314ee6be005e293c0eabe9
+          created: 1741556940362
+          modified: 1741583085797
+          sortKey: -1741583060698
+        children:
+          - url: "{{ _.base.base_url }}/admin/users"
+            name: Get All Users
+            meta:
+              id: req_8225dfcbb144408784e0d9cb34329583
+              created: 1741556949673
+              modified: 1742938722761
+              isPrivate: false
+              sortKey: -1741583089492
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.1
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{ _.auth_url }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.base.base_url }}/admin/users/5"
+            name: Delete User
+            meta:
+              id: req_1ced9d9d0f034fb6b7aebd4f2f975f10
+              created: 1741583103302
+              modified: 1742967758391
+              isPrivate: false
+              sortKey: -1741583089392
+            method: DELETE
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.1
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{ _.auth_url }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+  - name: Tickets
+    meta:
+      id: fld_af7b24820a884d639d633b4142c06b0f
+      created: 1742466149099
+      modified: 1742466377982
+      sortKey: -1742466190340
+    children:
+      - url: "{{ _.base.base_url }}/tickets"
+        name: All Tickets
+        meta:
+          id: req_c24e4e46169c42a1b1cee8ee602db886
+          created: 1741557226842
+          modified: 1742674922597
+          isPrivate: false
+          sortKey: -1742466402706
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets"
+        name: Create Ticket
+        meta:
+          id: req_c4b183cd5082416f949b6d5041dabacc
+          created: 1741582862346
+          modified: 1742985760907
+          isPrivate: false
+          sortKey: -1742466402606
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - id: pair_2312f5586c5f49a388bab25a1633f08c
+              name: subject
+              value: tesdata
+              disabled: false
+            - id: pair_58d74d422c6141fe8b5ae87dd2d2cf19
+              name: description
+              value: testdescription
+              disabled: false
+            - id: pair_c2de8b48572943eeb95da8819cfab054
+              name: category
+              value: general
+              disabled: false
+            - id: pair_8d41661576f5484faa5154e4d8b88893
+              name: priority
+              value: high
+              disabled: false
+            - id: pair_12231b256b324104982db9ade6b561b9
+              name: attachment
+              disabled: false
+              type: file
+              fileName: C:\Users\Hp\Documents\Dropbox\Screenshots\Screenshot 2025-02-18
+                220737.png
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets/5"
+        name: Update Ticket
+        meta:
+          id: req_6437733efc534a759f66274bbbe8810e
+          created: 1741582883198
+          modified: 1742555837432
+          isPrivate: false
+          sortKey: -1742466402531
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            
+            {
+            	"subject": "Update Refund",
+            	"description": "I need to update test my account.",
+            	"category": "general",
+            	"priority": "low",
+            	"attachment": null
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets/6"
+        name: Delete Ticket
+        meta:
+          id: req_e17160ba4ed64d90b43c218d0aac243f
+          created: 1741582896339
+          modified: 1742555920976
+          isPrivate: false
+          sortKey: -1742466402518.5
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets/3"
+        name: Show Ticket
+        meta:
+          id: req_58af894112f04f89920587b96d8868c0
+          created: 1741587870400
+          modified: 1742762979257
+          isPrivate: false
+          sortKey: -1742466402556
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Comments
+    meta:
+      id: fld_9f3cb023221f4b408c393929bd3840e0
+      created: 1742466453909
+      modified: 1742466471156
+      sortKey: -1742466190327.5
+    children:
+      - url: "{{ _.base.base_url }}/tickets/3/comments"
+        name: All Comments
+        meta:
+          id: req_abd99a956e4b4fbbb63586a0d199760e
+          created: 1742466453912
+          modified: 1742763021600
+          isPrivate: false
+          sortKey: -1742466402706
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets/1/comments"
+        name: Create Comment
+        meta:
+          id: req_b2a6773a1565474392c6530f3e958926
+          created: 1742466453915
+          modified: 1742556850688
+          isPrivate: false
+          sortKey: -1742466402606
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "title": "My First Post1",
+                "content": "This is the content of my first post."
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets/1/comments/7"
+        name: Delete Comment
+        meta:
+          id: req_499b3921edbd4f1cada6b6d5057a8be5
+          created: 1742466453920
+          modified: 1742557475515
+          isPrivate: false
+          sortKey: -1742466402518.5
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Chats
+    meta:
+      id: fld_346ceaf5a4e2448baa332be202fe11e9
+      created: 1742466531818
+      modified: 1742466538136
+      sortKey: -1742371994838.25
+    children:
+      - url: "{{ _.base.base_url }}/tickets/3/chats"
+        name: Chat Under a Ticket
+        meta:
+          id: req_6827830c633d4371921921e7bf2c1ce4
+          created: 1742466531820
+          modified: 1742995908081
+          isPrivate: false
+          sortKey: -1742466402706
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets/3/chats"
+        name: Create Chat
+        meta:
+          id: req_930d754a91b5456dba29e648eff23e83
+          created: 1742466531821
+          modified: 1742763061821
+          isPrivate: false
+          sortKey: -1742466402606
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "message": "My First Post2"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/tickets/1/chats/4"
+        name: Delete Chat
+        meta:
+          id: req_604d6ef69fa04b0c9b5972ec155a7049
+          created: 1742466531828
+          modified: 1742560622436
+          isPrivate: false
+          sortKey: -1742466402518.5
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        authentication:
+          type: bearer
+          disabled: false
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/chats"
+        name: All Chats
+        meta:
+          id: req_d6cfd0e1faa040399ec0e3e0cb9bc32b
+          created: 1742995911849
+          modified: 1742996082259
+          isPrivate: false
+          sortKey: -1742995911849
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.0
+        authentication:
+          type: bearer
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base.base_url }}/chats/mark-read-all/4"
+        name: Read Chat
+        meta:
+          id: req_9f512c3f8ade44979dac3375c34c140d
+          created: 1743000885938
+          modified: 1743002485221
+          isPrivate: false
+          sortKey: -1742731157277.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.0
+        authentication:
+          type: bearer
+          token: "{{ _.auth_url }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_80aa9f6d199c4e53a08b61f4b03bd0ff
+    created: 1741554648509
+    modified: 1742998219103
+  cookies:
+    - id: 88e761d8-4d0a-413e-8416-e04355e20eac
+      key: XSRF-TOKEN
+      value: eyJpdiI6Ik1UelNKRGQrcTBocFlMbDg1NHljc0E9PSIsInZhbHVlIjoiVndEVWIwRE9TTWtjcCs4K1BNbEVWZEdIRGVUallxaWNjYWVZNGwxQUxKeVlIUStwSlIrSlM2T3pzdHdTYlp1aTEvR2lEOWtSMW1ad3FUR3UrU3hUMTlSQkN3Ung5NHU3blJLTDJuUUljejBjeE4yME5JNDUwbUdPZnllWDBsVnMiLCJtYWMiOiI2NWU1ZDk5OWExNDY0NGUyODZkZmQxZDI3NDczZWU4NTc4ZmVhNGQ5MzlhOTI0MmMzOWQzZDZlMzA1Y2E4NmZiIiwidGFnIjoiIn0%3D
+      domain: localhost
+      path: /
+      secure: false
+      httpOnly: false
+      hostOnly: true
+    - id: 31c563c8-a402-4dd6-94e3-a6ab83a8d775
+      key: laravel_session
+      value: eyJpdiI6InBxdFV6STA0eDFnSlZvbVp6bFM3U0E9PSIsInZhbHVlIjoiVGtrZHBZcE51TXF0MjZFek9mV3pQQXF1eGZXcEtKZ0VST3Fac1lDYm9nYVYyc0pQN1V3VG13K1hENko4bGY3WjhMRDRNa1JSZmpRb1I0V3VBZ3VNb0hKclNZRGZFa1ZkWlJvWEZWNWwxTm9xaHNDUWZlL01oQUJIWVQ1cDVJSUYiLCJtYWMiOiJiZGU1M2RmMDgyNTQ5ODRiZmQ4NDdlMDdkNzc2MjY3NzE2MWUwZjlmMjRjM2VhM2ZiZWFkMjBhZWVhNTgxNzlhIiwidGFnIjoiIn0%3D
+      domain: localhost
+      path: /
+      secure: false
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_5cc1bfcbc5de447eb9a6eb7fcb092361
+    created: 1741554648505
+    modified: 1742998219110
+    isPrivate: false
+  data:
+    base:
+      base_url: http://localhost:8000/api
+  subEnvironments:
+    - name: "Development Environment:"
+      meta:
+        id: env_90daa18a543b47f8b63476d2099d8e33
+        created: 1741555453804
+        modified: 1742998219107
+        isPrivate: true
+        sortKey: 1741555453804
+      data:
+        dev:
+          base_url: http://localhost:8000/api
+        auth_url: Bearer 1|XgCUFw9waXqYJ6mUoYa6MHcLwASwVbBMx6xgGWJe810068d0
