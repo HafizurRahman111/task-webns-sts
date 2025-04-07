@@ -18,14 +18,17 @@
 
     <!-- Main Content -->
     <div v-else class="p-4">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">User Management</h2>
+      <!-- Header Row: Title Left, Search Right -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <!-- Title -->
+        <h2 class="text-2xl font-bold text-gray-800">User Management</h2>
 
-      <!-- Search and Table -->
-      <div class="header-container">
-        <div class="search-container">
-          <input v-model="searchQuery" placeholder="Search users..." @input="searchUsers" class="search-input" />
-          <button class="search-btn" @click="searchUsers">
-            🔍
+        <!-- Search Input + Button -->
+        <div class="flex items-center gap-2 w-full md:w-auto">
+          <input v-model="searchQuery" @input="searchUsers" type="text" placeholder="Search users..."
+            class="w-full md:w-64 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button @click="searchUsers" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <i class="fa fa-search"></i>
           </button>
         </div>
       </div>
@@ -234,7 +237,7 @@ export default {
 .user-management {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
@@ -244,7 +247,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
   gap: 1rem;
 }

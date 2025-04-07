@@ -1,34 +1,22 @@
 <template>
   <div class="auth-buttons">
     <template v-if="!authStore.isAuthenticated">
-      <router-link 
-        to="/login"
-        class="auth-button login-button"
-      >
+      <router-link to="/login" class="auth-button login-button">
         <FontAwesomeIcon :icon="['fas', 'sign-in-alt']" />
         <span>Login</span>
       </router-link>
-      <router-link
-        to="/register"
-        class="auth-button register-button"
-      >
+      <router-link to="/register" class="auth-button register-button">
         <FontAwesomeIcon :icon="['fas', 'user-plus']" />
         <span>Register</span>
       </router-link>
     </template>
 
     <template v-else>
-      <router-link
-        to="/dashboard"
-        class="auth-button dashboard-button"
-      >
+      <router-link to="/dashboard" class="auth-button dashboard-button">
         <FontAwesomeIcon :icon="['fas', 'tachometer-alt']" />
         <span>Dashboard</span>
       </router-link>
-      <button
-        @click="handleLogout"
-        class="auth-button logout-button"
-      >
+      <button @click="handleLogout" class="auth-button logout-button">
         <FontAwesomeIcon :icon="['fas', 'sign-out-alt']" />
         <span>Logout</span>
       </button>
@@ -70,7 +58,7 @@ const handleLogout = async () => {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 1rem;
   border-radius: 0.375rem;
   font-weight: 500;
   transition: all 0.2s ease;

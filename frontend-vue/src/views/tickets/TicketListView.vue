@@ -18,13 +18,11 @@
 
         <!-- Main Content -->
         <div v-else class="p-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Tickets List</h2>
-
-            <!-- Header: Search and Add New -->
-            <div class="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0">
-
-                <div class="flex items-center space-x-4 flex-grow">
-                    <!-- Per Page Dropdown -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4 flex-wrap">
+                <h2 class="text-2xl font-bold text-gray-800">
+                    Tickets List
+                </h2>
+                <div class="flex flex-wrap items-center gap-4 justify-end">
                     <select v-model="perPage" @change="fetchTickets(1)"
                         class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="10">Show 10</option>
@@ -34,18 +32,12 @@
                         <option value="100">Show 100</option>
                         <option value="-1">Show All</option>
                     </select>
-                </div>
-
-                <div class="flex items-center space-x-4">
-                    <!-- Add New Button (Visible only to Admin) -->
-                    <button @click="createTicket"
-                        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
-                        Add New
-                    </button>
-
-                    <!-- Search Bar -->
                     <input v-model="searchQuery" type="text" placeholder="Search tickets..."
                         class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <button @click="createTicket"
+                        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                        Add New
+                    </button>
                 </div>
             </div>
 
@@ -107,7 +99,7 @@
                                             class="px-3 py-1 text-sm font-semibold text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200 flex items-center">
                                             View
                                         </button>
-                                        <button @click="editTicket(ticket.id)"
+                                        <button @click="updateTicket(ticket.id)"
                                             class="px-3 py-1 text-sm font-semibold text-yellow-600 bg-yellow-100 rounded-lg hover:bg-yellow-200 flex items-center">
                                             Edit
                                         </button>
@@ -345,6 +337,11 @@ const viewTicket = (ticketId) => {
     router.push({ name: 'TicketDetails', params: { id: ticketId } });
 };
 
+// Edit Ticket
+const updateTicket = (ticketId) => {
+    router.push({ name: 'TicketEdit', params: { id: ticketId } });
+};
+
 // Confirm delete
 const confirmDelete = (ticket) => {
     ticketToDelete.value = ticket;
@@ -382,7 +379,7 @@ onMounted(() => {
 .ticket-management {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
 }

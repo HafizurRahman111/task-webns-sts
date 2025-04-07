@@ -1,19 +1,10 @@
 <template>
   <div class="dashboard-layout">
-    <DashboardHeader 
-      :user="userDetails"
-      :is-dropdown-open="isDropdownOpen"
-      :user-initials="userInitials"
-      @toggle-dropdown="toggleDropdown"
-      @logout="handleLogout"
-      @toggle-sidebar="toggleSidebar"
-    />
+    <DashboardHeader :user="userDetails" :is-dropdown-open="isDropdownOpen" :user-initials="userInitials"
+      @toggle-dropdown="toggleDropdown" @logout="handleLogout" @toggle-sidebar="toggleSidebar" />
 
     <div class="dashboard-content-container">
-      <DashboardSidebar 
-        :is-open="isSidebarOpen"
-        :user-role="userRole"
-      />
+      <DashboardSidebar :is-open="isSidebarOpen" :user-role="userRole" />
 
       <main class="main-content-area" :class="{ 'sidebar-collapsed': !isSidebarOpen }">
         <router-view v-slot="{ Component }">
@@ -71,7 +62,6 @@ const handleLogout = async () => {
     router.push({ name: 'login' })
   } catch (error) {
     console.error('Logout failed:', error)
-    // Consider adding user notification here
   }
 }
 
@@ -104,17 +94,17 @@ onUnmounted(() => {
 .dashboard-content-container {
   display: flex;
   flex: 1;
-  padding-top: 4rem; /* Match header height */
+  padding-top: 1.5rem;
   position: relative;
   overflow: hidden;
 }
 
 .main-content-area {
   flex: 1;
-  padding: 1.5rem;
-  margin-left: 16rem; /* Match sidebar width */
+  padding: 1rem;
+  margin-left: 15rem;
   transition: margin-left 0.3s ease;
-  min-height: calc(100vh - 4rem); /* Full height minus header */
+  min-height: calc(100vh - 3rem);
   overflow-y: auto;
   background-color: var(--color-bg);
 }

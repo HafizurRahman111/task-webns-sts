@@ -15,6 +15,7 @@ const UserListView = () => import('@/views/users/UserListView.vue')
 const TicketListView = () => import('@/views/tickets/TicketListView.vue')
 const TicketCreateView = () => import('@/views/tickets/TicketCreateView.vue')
 const TicketDetailView = () => import('@/views/tickets/TicketDetailView.vue')
+const TicketEditView = () => import('@/views/tickets/TicketEditView.vue')
 const ChatListView = () => import('@/views/chats/ChatListView.vue')
 
 const routes = [
@@ -106,6 +107,13 @@ const routes = [
         component: TicketDetailView,
         props: true,
         meta: { title: 'Ticket Details' }
+      },
+      {
+        path: '/tickets/:id/edit',
+        name: 'TicketEdit',
+        component: TicketEditView,
+        props: true,
+        meta: { title: 'Ticket Edit' }
       },
     ]
   },

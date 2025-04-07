@@ -110,12 +110,12 @@ const dropdownRef = ref(null)
 
 // Debug: Add computed property logging
 const userInitials = computed(() => {
-  const initials = props.user?.name 
+  const initials = props.user?.name
     ? props.user.name
-        .split(' ')
-        .slice(0, 2)
-        .map(name => name[0].toUpperCase())
-        .join('')
+      .split(' ')
+      .slice(0, 2)
+      .map(name => name[0].toUpperCase())
+      .join('')
     : 'U'
   // console.log('[DashboardHeader] Computed initials:', initials)
   return initials
@@ -124,9 +124,9 @@ const userInitials = computed(() => {
 const formattedRole = computed(() => {
   const role = props.user?.role
     ? props.user.role
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ')
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ')
     : ''
   // console.log('[DashboardHeader] Computed role:', role)
   return role
@@ -168,7 +168,7 @@ onClickOutside(dropdownRef, () => {
   top: 0;
   left: 0;
   right: 0;
-  height: 4rem;
+  height: 3rem;
   background-color: white;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -184,7 +184,7 @@ onClickOutside(dropdownRef, () => {
   height: 100%;
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
 }
 
 .header-logo .logo-link {
@@ -209,7 +209,7 @@ onClickOutside(dropdownRef, () => {
 .user-controls {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .notification-button {
@@ -217,7 +217,7 @@ onClickOutside(dropdownRef, () => {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.3rem;
   color: #6b7280;
   transition: color 0.2s ease;
 }
@@ -230,8 +230,8 @@ onClickOutside(dropdownRef, () => {
   position: absolute;
   top: 0;
   right: 0;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -249,14 +249,14 @@ onClickOutside(dropdownRef, () => {
 }
 
 .user-greeting {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: #4b5563;
   font-weight: 500;
 }
 
 .user-role-badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.75rem;
+  font-size: 0.6rem;
+  padding: 0.2rem 0.7rem;
   background-color: #f3f4f6;
   color: #374151;
   border-radius: 9999px;
@@ -275,7 +275,7 @@ onClickOutside(dropdownRef, () => {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.2rem;
   transition: opacity 0.2s ease;
 }
 
@@ -287,8 +287,8 @@ onClickOutside(dropdownRef, () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 9999px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
@@ -300,13 +300,13 @@ onClickOutside(dropdownRef, () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 9999px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
   font-weight: 600;
-  font-size: 1.25rem;
+  font-size: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
 }
@@ -363,7 +363,7 @@ onClickOutside(dropdownRef, () => {
 }
 
 .user-email {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: #6b7280;
   white-space: nowrap;
   overflow: hidden;
@@ -379,11 +379,11 @@ onClickOutside(dropdownRef, () => {
 .dropdown-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   text-align: left;
-  font-size: 0.9375rem;
+  font-size: 0.8rem;
   color: #374151;
   background: none;
   border: none;
@@ -397,8 +397,8 @@ onClickOutside(dropdownRef, () => {
 }
 
 .dropdown-icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
   color: #9ca3af;
   flex-shrink: 0;
 }

@@ -6,14 +6,14 @@
       <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
         <!-- Form Header -->
         <div class="bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-4">
-          <h2 class="text-2xl font-bold text-white">Create New Ticket</h2>
-          <p class="text-blue-100 mt-1">Fill out the form below to submit a new support request</p>
+          <h2 class="text-2xl font-bold text-gray-500">Create New Ticket</h2>
+          <p class="text-gray-400 mt-1">Fill out the form below to submit a new support request</p>
         </div>
 
         <form @submit.prevent="submitForm" class="p-6" method="POST" enctype="multipart/form-data">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Left Column -->
-            <div class="space-y-6">
+            <div class="space-y-4">
               <!-- Subject Field -->
               <div class="form-group">
                 <label for="subject" class="form-label">Subject *</label>
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Right Column -->
-            <div class="space-y-6">
+            <div class="space-y-4">
               <!-- Category Field -->
               <div class="form-group">
                 <label for="category" class="form-label">Category *</label>
@@ -284,19 +284,18 @@ onMounted(initForm)
 .ticket-management {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Form Elements */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .form-label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #374151;
 }
@@ -304,7 +303,7 @@ onMounted(initForm)
 .form-input {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 0.3rem 0.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   background-color: white;

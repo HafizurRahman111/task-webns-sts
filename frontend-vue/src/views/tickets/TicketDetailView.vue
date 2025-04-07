@@ -1,19 +1,14 @@
 <template>
+    <div class="ticket-management">
 
-    <div class="p-1">
-        <!-- Back Button -->
-        <button @click="goBack"
-            class="mb-4 px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Tickets
-        </button>
 
         <!-- Ticket Details Section -->
         <div class="bg-white p-4 rounded-lg shadow-sm mb-2">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Ticket Details</h2>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Ticket Details</h2>
+                <!-- Back Button -->
+                <BackButton @click="goBack" label="Go to Previous Page" />
+            </div>
 
             <!-- Loading State -->
             <div v-if="loading" class="flex justify-center items-center h-32">
@@ -104,40 +99,70 @@
             <div v-if="commentError" class="text-red-600 text-sm mt-1">{{ commentError }}</div>
 
             <!-- Comments List -->
-            <div v-if="ticket.comments && ticket.comments.length > 0">
-                <div v-for="comment in ticket.comments" :key="comment.id" class="mb-4">
-                    <div class="flex items-start space-x-4 mt-2">
-                        <!-- User Avatar -->
-                        <div class="flex-shrink-0 m-2">
-                            <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                <span class="text-gray-600">{{ comment.user?.name?.charAt(0) || 'U' }}</span>
-                            </div>
+            <div v-if="ticket.comments?.length" class="space-y-6">
+                <div v-for="comment in ticket.comments" :key="comment.id"
+                    class="flex items-start justify-between space-x-4 p-4 border-b border-gray-200">
+
+                    <!-- User Avatar -->
+                    <div class="flex-shrink-0">
+                        <div v-if="comment.user?.avatar" class="h-12 w-12 rounded-full overflow-hidden">
+                            <img :src="comment.user.avatar" :alt="comment.user.name" class="h-full w-full object-cover">
+                        </div>
+                        <div v-else :class="[
+                            'h-12 w-12 rounded-full flex items-center justify-center',
+                            comment.user_id === currentUser.id ? 'bg-green-100' : 'bg-gray-200'
+                        ]">
+                            <span :class="[
+                                comment.user_id === currentUser.id ? 'text-green-600' : 'text-gray-600',
+                                'font-bold'
+                            ]">
+                                {{ (comment.user?.name || currentUser.name).charAt(0).toUpperCase() }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Comment Content -->
+                    <div class="flex-1">
+                        <!-- User Name -->
+                        <div :class="[
+                            'text-sm font-semibold',
+                            comment.user_id === currentUser.id ? 'text-green-600' : 'text-gray-700'
+                        ]">
+                            {{ comment.user?.name || currentUser.name }}
                         </div>
 
-                        <!-- Comment Content -->
-                        <div class="flex-1">
-                            <div :class="getCommentUserClass(comment.user_id)" class="text-sm font-semibold">
-                                {{ comment.user?.name || 'Unknown User' }}
-                            </div>
-                            <div :class="getCommentContentClass(comment.user_id)" class="text-sm">
+                        <!-- Comment Content and Timestamp (Two Rows) -->
+                        <div class="mt-2">
+                            <!-- Comment Content -->
+                            <div class="text-sm text-gray-800">
                                 {{ comment.content }}
                             </div>
-                            <div class="text-xs text-gray-500">{{ formatDate(comment.created_at) }}</div>
-                        </div>
 
-                        <!-- Delete Button (Only for authenticated user's comments) -->
-                        <div v-if="comment.user_id === currentUserId" class="flex-shrink-0">
-                            <button @click="confirmDeleteComment(comment)" class="text-red-600 hover:text-red-800">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
+                            <!-- Timestamp -->
+                            <div :class="[
+                                'text-xs mt-1',
+                                comment.user_id === currentUser.id ? 'text-green-500' : 'text-gray-500'
+                            ]">
+                                {{ formatDate(comment.created_at) }}
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Delete Button (only show for current user's comments) -->
+                    <div v-if="comment.user_id === currentUser.id" class="flex-shrink-0">
+                        <button @click="confirmDeleteComment(comment)"
+                            class="p-2 rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-200 transition-colors"
+                            aria-label="Delete comment">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-red-600"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
+
             <div v-else class="text-gray-500">No comments yet.</div>
         </div>
     </div>
@@ -151,11 +176,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import Swal from 'sweetalert2';
-import apiClient from '@/services/api.js';
-import { useAuthStore } from '@/stores/auth.js';
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
+import apiClient from '@/services/api.js'
+import { useAuthStore } from '@/stores/auth.js'
+import BackButton from '@/components/ui/BackButton.vue'
 
 // Use the auth store
 const authStore = useAuthStore();
@@ -191,7 +217,16 @@ const attachmentUrl = ref('');
 const attachmentLoading = ref(false);
 
 // Fetch the current authenticated user ID
-const currentUserId = computed(() => authStore.user.data?.id || null);
+const currentUserId = computed(() => {
+    return authStore.user.id || null;
+});
+
+const currentUser = computed(() => ({
+    id: authStore.user?.id,
+    name: authStore.user?.name || 'You',
+    avatar: authStore.user?.avatar,
+    initials: authStore.user?.name?.charAt(0) || 'Y'
+}));
 
 // Fetch ticket details
 const fetchTicket = async () => {
@@ -257,30 +292,60 @@ const getStatusClass = (status) => {
 
 // Get comment user class based on user ID
 const getCommentUserClass = (userId) => {
-    return userId === currentUserId.value ? 'text-blue-600' : 'text-green-600';
+    return userId === currentUserId.value ? 'text-green-600' : 'text-blue-500';
 };
 
 // Get comment content class based on user ID
 const getCommentContentClass = (userId) => {
-    return userId === currentUserId.value ? 'text-blue-800' : 'text-green-800';
+    return userId === currentUserId.value ? 'text-green-800' : 'text-blue-800';
 };
 
 // Add a comment
 const addComment = async () => {
     if (!newComment.value.trim()) {
-        commentError.value = 'Comment cannot be empty.';
+        commentError.value = 'Comment cannot be empty';
         return;
     }
 
+    // Create optimistic comment (immediate UI update)
+    const tempComment = {
+        id: `temp-${Date.now()}`,
+        content: newComment.value,
+        created_at: new Date().toISOString(),
+        user: { ...currentUser.value }, // Clone current user data
+        user_id: currentUser.value.id,
+        isOptimistic: true // Flag for temporary comments
+    };
+
+    // Add to beginning of array (newest first)
+    ticket.value.comments.unshift(tempComment);
+    newComment.value = '';
+    commentError.value = '';
+
     try {
-        const response = await apiClient.addComment(ticket.value.id, { content: newComment.value });
-        ticket.value.comments.push(response.data.data);
-        newComment.value = '';
-        commentError.value = '';
-        showToast('Comment added successfully!');
-    } catch (err) {
-        console.error('Failed to add comment:', err);
-        showToast('Failed to add comment. Please try again.', 'error');
+        // API call
+        const response = await apiClient.addComment(ticket.value.id, {
+            content: tempComment.content
+        });
+
+        // Replace temporary comment with server response
+        const serverComment = {
+            ...response.data.data,
+            // Ensure user data exists
+            user: response.data.data.user || { ...currentUser.value }
+        };
+
+        const index = ticket.value.comments.findIndex(c => c.id === tempComment.id);
+        if (index !== -1) {
+            ticket.value.comments.splice(index, 1, serverComment);
+        }
+
+        showToast('Comment added!');
+    } catch (error) {
+        console.error('Comment failed:', error);
+        // Remove temporary comment on error
+        ticket.value.comments = ticket.value.comments.filter(c => c.id !== tempComment.id);
+        showToast('Failed to add comment', 'error');
     }
 };
 
@@ -333,6 +398,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.ticket-management {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .mb-1 {
     margin-bottom: .25rem;
 }
@@ -366,5 +438,33 @@ onMounted(() => {
 
 .font-bold {
     font-weight: 500;
+}
+
+.delete-btn {
+    padding: 0.25rem;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+    background-color: #f0fdf4;
+}
+
+.delete-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #f8723d;
+}
+
+.delete-icon {
+    height: 1.25rem;
+    width: 1.25rem;
+}
+
+.current-user .delete-icon {
+    color: #eb3a1b;
+}
+
+.current-user .delete-icon:hover {
+    color: #861616;
 }
 </style>
